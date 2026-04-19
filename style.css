@@ -429,6 +429,10 @@ h1 {
   overflow: hidden;
 }
 
+:root.dark .pixel-runway {
+  background: linear-gradient(to bottom, transparent 0 72%, rgba(178, 226, 193, 0.12) 72% 100%);
+}
+
 .pixel-runner {
   position: absolute;
   bottom: 6px;
@@ -440,35 +444,11 @@ h1 {
   background-position: 0 -96px;
   background-size: auto;
   image-rendering: pixelated;
-  animation: pixel-run-arc 10s linear infinite;
   will-change: left, transform, background-position;
 }
 
-@keyframes pixel-run-arc {
-  0% {
-    left: -40px;
-    transform: scaleX(1);
-  }
-
-  48% {
-    left: calc(100% - 4px);
-    transform: scaleX(1);
-  }
-
-  50% {
-    left: calc(100% - 4px);
-    transform: scaleX(-1);
-  }
-
-  98% {
-    left: -40px;
-    transform: scaleX(-1);
-  }
-
-  100% {
-    left: -40px;
-    transform: scaleX(1);
-  }
+.pixel-runner.flipped {
+  transform: scaleX(-1);
 }
 
 .reveal {
@@ -540,7 +520,6 @@ h1 {
   }
 
   .pixel-runner {
-    animation: none;
     left: 0;
     background-position: 0 -96px;
   }
