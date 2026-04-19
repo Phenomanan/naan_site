@@ -420,6 +420,135 @@ h1 {
   font-size: 0.93rem;
 }
 
+.pixel-runway {
+  position: relative;
+  margin-top: 0.6rem;
+  height: 56px;
+  border-top: 1px dashed var(--border);
+  background: linear-gradient(to bottom, transparent 0 72%, rgba(40, 80, 56, 0.1) 72% 100%);
+  overflow: hidden;
+}
+
+.pixel-runner {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  width: 38px;
+  height: 24px;
+  background: #79c76f;
+  border: 2px solid #2f6f42;
+  border-radius: 2px;
+  box-shadow:
+    inset -7px -6px 0 #64b65d,
+    inset 10px 2px 0 #90d886;
+  image-rendering: pixelated;
+  animation: pixel-run-arc 10s linear infinite;
+}
+
+.pixel-bulb {
+  position: absolute;
+  top: -11px;
+  left: 10px;
+  width: 17px;
+  height: 14px;
+  background: #4f9966;
+  border: 2px solid #2f6f42;
+  border-radius: 2px;
+}
+
+.pixel-bulb::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  right: -8px;
+  width: 9px;
+  height: 9px;
+  background: #43885a;
+  border: 2px solid #2f6f42;
+  border-left: none;
+}
+
+.pixel-eye {
+  position: absolute;
+  top: 9px;
+  width: 3px;
+  height: 3px;
+  background: #9e2d4d;
+}
+
+.pixel-eye-left {
+  left: 9px;
+}
+
+.pixel-eye-right {
+  left: 17px;
+}
+
+.pixel-leg {
+  position: absolute;
+  bottom: -4px;
+  width: 6px;
+  height: 4px;
+  background: #2f6f42;
+}
+
+.pixel-leg-front {
+  left: 8px;
+  animation: pixel-leg-front-step 260ms steps(2, end) infinite;
+}
+
+.pixel-leg-back {
+  left: 23px;
+  animation: pixel-leg-back-step 260ms steps(2, end) infinite;
+}
+
+@keyframes pixel-leg-front-step {
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(2px);
+  }
+}
+
+@keyframes pixel-leg-back-step {
+  0% {
+    transform: translateY(2px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes pixel-run-arc {
+  0% {
+    left: -40px;
+    transform: scaleX(1);
+  }
+
+  48% {
+    left: calc(100% - 4px);
+    transform: scaleX(1);
+  }
+
+  50% {
+    left: calc(100% - 4px);
+    transform: scaleX(-1);
+  }
+
+  98% {
+    left: -40px;
+    transform: scaleX(-1);
+  }
+
+  100% {
+    left: -40px;
+    transform: scaleX(1);
+  }
+}
+
 .reveal {
   opacity: 0;
   transform: translateY(16px);
@@ -486,5 +615,14 @@ h1 {
     transition: none;
     opacity: 1;
     transform: none;
+  }
+
+  .pixel-runner {
+    animation: none;
+    left: 0;
+  }
+
+  .pixel-leg {
+    animation: none;
   }
 }
