@@ -435,15 +435,16 @@ h1 {
 
 .pixel-runner {
   position: absolute;
-  bottom: 6px;
+  bottom: 2px;
   left: 0;
-  width: 32px;
-  height: 32px;
+  width: 41px;
+  height: 53px;
   background-image: url("bulba_sprite_sheet.png");
   background-repeat: no-repeat;
-  background-position: 0 -96px;
+  background-position: 0 0;
   background-size: auto;
   image-rendering: pixelated;
+  transform-origin: center bottom;
   will-change: left, transform, background-position;
 }
 
@@ -521,6 +522,6 @@ h1 {
 
   .pixel-runner {
     left: 0;
-    background-position: 0 -96px;
+    background-position: 0 0;
   }
 }
