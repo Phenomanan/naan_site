@@ -114,13 +114,17 @@ document.addEventListener("keydown", (event) => {
 
 if (bulbaRunner && bulbaRunnerImg && pixelRunway) {
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const assetVersion = "20260419";
+  const assetVersion = "20260419b";
   const leftAsset = `bulba_facing_left.JPG?v=${assetVersion}`;
   const rightAsset = `bulba_facing_right.JPG?v=${assetVersion}`;
+  const frameCount = 4;
   let direction = 1;
   let position = 0;
   let lastTime = 0;
+  let frameTimer = 0;
+  let frameIndex = 0;
   const speedPxPerSec = 78;
+  const frameMs = 120;
 
   function loadImage(src) {
     return new Promise((resolve, reject) => {
@@ -131,21 +135,88 @@ if (bulbaRunner && bulbaRunnerImg && pixelRunway) {
     });
   }
 
-  Promise.all([
-    loadImage(leftAsset),
-    loadImage(rightAsset),
-  ]).then(([leftImg, rightImg]) => {
-    const leftSrc = leftAsset;
-    const rightSrc = rightAsset;
+  function makeTransparentFrameStripFrames(sourceImage) {
+    const frames = [];
+    for (let index = 0; index < frameCount; index += 1) {
+      const startX = Math.round((index * sourceImage.width) / frameCount);
+      const endX = Math.round(((index + 1) * sourceImage.width) / frameCount);
+      const frameWidth = endX - startX;
+      const canvas = document.createElement("canvas");
+      canvas.width = frameWidth;
+      canvas.height = sourceImage.height;
+      const ctx = canvas.getContext("2d", { willReadFrequently: true });
+      if (!ctx) {
+        continue;
+      }
 
+      ctx.drawImage(
+        sourceImage,
+        startX,
+        0,
+        frameWidth,
+        sourceImage.height,
+        0,
+        0,
+        frameWidth,
+        sourceImage.height
+      );
+
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imageData.data;
+      const cornerIndexes = [
+        0,
+        (canvas.width - 1) * 4,
+        (canvas.width * (canvas.height - 1)) * 4,
+        (canvas.width * canvas.height - 1) * 4,
+      ];
+      const samples = cornerIndexes.map((idx) => ({
+        r: data[idx],
+        g: data[idx + 1],
+        b: data[idx + 2],
+        a: data[idx + 3],
+      }));
+      const opaqueSample = samples.find((sample) => sample.a > 0);
+
+      if (opaqueSample) {
+        const threshold = 60;
+        for (let i = 0; i < data.length; i += 4) {
+          const dr = Math.abs(data[i] - opaqueSample.r);
+          const dg = Math.abs(data[i + 1] - opaqueSample.g);
+          const db = Math.abs(data[i + 2] - opaqueSample.b);
+          if (dr <= threshold && dg <= threshold && db <= threshold) {
+            data[i + 3] = 0;
+          }
+        }
+        ctx.putImageData(imageData, 0, 0);
+      }
+
+      frames.push({
+        src: canvas.toDataURL("image/png"),
+        width: frameWidth,
+        height: sourceImage.height,
+      });
+    }
+    return frames;
+  }
+
+  Promise.all([loadImage(leftAsset), loadImage(rightAsset)]).then(([leftImg, rightImg]) => {
+    const leftFrames = makeTransparentFrameStripFrames(leftImg);
+    const rightFrames = makeTransparentFrameStripFrames(rightImg);
+    const allFrames = [...leftFrames, ...rightFrames];
+    const maxFrameWidth = Math.max(...allFrames.map((frame) => frame.width));
+    const maxFrameHeight = Math.max(...allFrames.map((frame) => frame.height));
     const targetHeight = 52;
-    const aspect = rightImg.width / rightImg.height;
-    const targetWidth = Math.round(targetHeight * aspect);
+    const targetWidth = Math.round((targetHeight * maxFrameWidth) / maxFrameHeight);
+
     bulbaRunner.style.width = `${targetWidth}px`;
     bulbaRunner.style.height = `${targetHeight}px`;
 
-    function updateFacing() {
-      bulbaRunnerImg.src = direction === 1 ? rightSrc : leftSrc;
+    function updateFacingFrame() {
+      const frames = direction === 1 ? rightFrames : leftFrames;
+      const currentFrame = frames[frameIndex % frames.length];
+      if (currentFrame) {
+        bulbaRunnerImg.src = currentFrame.src;
+      }
     }
 
     function animate(timestamp) {
@@ -159,18 +230,26 @@ if (bulbaRunner && bulbaRunnerImg && pixelRunway) {
       if (position >= maxX) {
         position = maxX;
         direction = -1;
-        updateFacing();
+        frameIndex = 0;
+        updateFacingFrame();
       } else if (position <= 0) {
         position = 0;
         direction = 1;
-        updateFacing();
+        frameIndex = 0;
+        updateFacingFrame();
       }
 
       bulbaRunner.style.left = `${position}px`;
+      frameTimer += delta;
+      if (frameTimer >= frameMs) {
+        frameIndex = (frameIndex + 1) % frameCount;
+        updateFacingFrame();
+        frameTimer = 0;
+      }
       window.requestAnimationFrame(animate);
     }
 
-    updateFacing();
+    updateFacingFrame();
 
     if (prefersReducedMotion) {
       bulbaRunner.classList.remove("is-running");
