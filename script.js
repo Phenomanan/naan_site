@@ -114,6 +114,9 @@ document.addEventListener("keydown", (event) => {
 
 if (bulbaRunner && bulbaRunnerImg && pixelRunway) {
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const assetVersion = "20260419";
+  const leftAsset = `bulba_facing_left.JPG?v=${assetVersion}`;
+  const rightAsset = `bulba_facing_right.JPG?v=${assetVersion}`;
   let direction = 1;
   let position = 0;
   let lastTime = 0;
@@ -128,56 +131,12 @@ if (bulbaRunner && bulbaRunnerImg && pixelRunway) {
     });
   }
 
-  function keyOutBackground(sourceImage) {
-    const canvas = document.createElement("canvas");
-    canvas.width = sourceImage.width;
-    canvas.height = sourceImage.height;
-    const ctx = canvas.getContext("2d", { willReadFrequently: true });
-    if (!ctx) return sourceImage.src;
-
-    ctx.drawImage(sourceImage, 0, 0);
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const data = imageData.data;
-
-    const cornerIndexes = [
-      0,
-      (canvas.width - 1) * 4,
-      (canvas.width * (canvas.height - 1)) * 4,
-      (canvas.width * canvas.height - 1) * 4,
-    ];
-
-    const samples = cornerIndexes.map((idx) => ({
-      r: data[idx],
-      g: data[idx + 1],
-      b: data[idx + 2],
-      a: data[idx + 3],
-    }));
-
-    const opaqueSamples = samples.filter((s) => s.a > 0);
-    if (opaqueSamples.length === 0) return sourceImage.src;
-
-    const key = opaqueSamples[0];
-    const threshold = 56;
-
-    for (let i = 0; i < data.length; i += 4) {
-      const dr = Math.abs(data[i] - key.r);
-      const dg = Math.abs(data[i + 1] - key.g);
-      const db = Math.abs(data[i + 2] - key.b);
-      if (dr <= threshold && dg <= threshold && db <= threshold) {
-        data[i + 3] = 0;
-      }
-    }
-
-    ctx.putImageData(imageData, 0, 0);
-    return canvas.toDataURL("image/png");
-  }
-
   Promise.all([
-    loadImage("bulba_facing_left.JPG"),
-    loadImage("bulba_facing_right.JPG"),
+    loadImage(leftAsset),
+    loadImage(rightAsset),
   ]).then(([leftImg, rightImg]) => {
-    const leftSrc = keyOutBackground(leftImg);
-    const rightSrc = keyOutBackground(rightImg);
+    const leftSrc = leftAsset;
+    const rightSrc = rightAsset;
 
     const targetHeight = 52;
     const aspect = rightImg.width / rightImg.height;
