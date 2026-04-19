@@ -435,21 +435,34 @@ h1 {
 
 .pixel-runner {
   position: absolute;
-  bottom: 2px;
+  bottom: 4px;
   left: 0;
-  width: 41px;
-  height: 53px;
-  background-image: url("bulba_sprite_sheet.png");
-  background-repeat: no-repeat;
-  background-position: 0 0;
-  background-size: auto;
-  image-rendering: pixelated;
+  width: 52px;
+  height: 52px;
   transform-origin: center bottom;
-  will-change: left, transform, background-position;
+  will-change: left;
 }
 
-.pixel-runner.flipped {
-  transform: scaleX(-1);
+.pixel-runner img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  display: block;
+}
+
+.pixel-runner.is-running img {
+  animation: bulba-bob 220ms steps(2, end) infinite;
+}
+
+@keyframes bulba-bob {
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(-2px);
+  }
 }
 
 .reveal {
@@ -522,6 +535,9 @@ h1 {
 
   .pixel-runner {
     left: 0;
-    background-position: 0 0;
+  }
+
+  .pixel-runner img {
+    animation: none;
   }
 }

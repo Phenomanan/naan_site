@@ -8,6 +8,7 @@ const lightbox = document.getElementById("imageLightbox");
 const lightboxImage = document.getElementById("lightboxImage");
 const lightboxClose = document.getElementById("lightboxClose");
 const bulbaRunner = document.getElementById("bulbaRunner");
+const bulbaRunnerImg = document.getElementById("bulbaRunnerImg");
 const pixelRunway = document.querySelector(".pixel-runway");
 
 if (yearTarget) {
@@ -111,75 +112,53 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-if (bulbaRunner) {
-  const spriteConfig = {
-    cols: 5,
-    rows: 3,
-    runRow: 2,
-    spriteFacesRight: false,
-  };
-  let frameW = 41;
-  let frameH = 53;
-  const framesRight = [0, 1, 2, 3, 4];
-  const framesLeft = [2, 3, 4, 0, 1];
-  let frameIndex = 0;
+if (bulbaRunner && bulbaRunnerImg && pixelRunway) {
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   let direction = 1;
   let position = 0;
   let lastTime = 0;
-  let frameTimer = 0;
-  const frameMs = 105;
-  const speedPxPerSec = 74;
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const speedPxPerSec = 78;
 
-  function applyFrame() {
-    const activeFrames = direction === 1 ? framesRight : framesLeft;
-    const frameXIndex = activeFrames[frameIndex];
-    const frameX = frameXIndex * frameW;
-    const frameY = spriteConfig.runRow * frameH;
-    bulbaRunner.style.backgroundPosition = `-${frameX}px -${frameY}px`;
-    frameIndex = (frameIndex + 1) % activeFrames.length;
+  function loadImage(src) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = src;
+    });
   }
 
-  function applyDirectionFacing() {
-    const shouldFlip = (direction === 1) !== spriteConfig.spriteFacesRight;
-    bulbaRunner.classList.toggle("flipped", shouldFlip);
-  }
-
-  function stripSpriteBackground(spriteImage) {
+  function keyOutBackground(sourceImage) {
     const canvas = document.createElement("canvas");
-    canvas.width = spriteImage.width;
-    canvas.height = spriteImage.height;
+    canvas.width = sourceImage.width;
+    canvas.height = sourceImage.height;
     const ctx = canvas.getContext("2d", { willReadFrequently: true });
-    if (!ctx) return;
+    if (!ctx) return sourceImage.src;
 
-    ctx.drawImage(spriteImage, 0, 0);
+    ctx.drawImage(sourceImage, 0, 0);
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const data = imageData.data;
 
-    const cornerPoints = [
+    const cornerIndexes = [
       0,
       (canvas.width - 1) * 4,
       (canvas.width * (canvas.height - 1)) * 4,
       (canvas.width * canvas.height - 1) * 4,
     ];
 
-    // Pick a key color from corners to strip any solid sprite-sheet background.
-    const key = { r: data[cornerPoints[0]], g: data[cornerPoints[0] + 1], b: data[cornerPoints[0] + 2], a: data[cornerPoints[0] + 3] };
-    for (const idx of cornerPoints) {
-      if (data[idx + 3] > 0) {
-        key.r = data[idx];
-        key.g = data[idx + 1];
-        key.b = data[idx + 2];
-        key.a = data[idx + 3];
-        break;
-      }
-    }
+    const samples = cornerIndexes.map((idx) => ({
+      r: data[idx],
+      g: data[idx + 1],
+      b: data[idx + 2],
+      a: data[idx + 3],
+    }));
 
-    if (key.a === 0) {
-      return;
-    }
+    const opaqueSamples = samples.filter((s) => s.a > 0);
+    if (opaqueSamples.length === 0) return sourceImage.src;
 
-    const threshold = 44;
+    const key = opaqueSamples[0];
+    const threshold = 56;
+
     for (let i = 0; i < data.length; i += 4) {
       const dr = Math.abs(data[i] - key.r);
       const dg = Math.abs(data[i + 1] - key.g);
@@ -190,62 +169,60 @@ if (bulbaRunner) {
     }
 
     ctx.putImageData(imageData, 0, 0);
-    bulbaRunner.style.backgroundImage = `url(${canvas.toDataURL("image/png")})`;
+    return canvas.toDataURL("image/png");
   }
 
-  function animateBulba(timestamp) {
-    if (!pixelRunway) return;
-    if (!lastTime) {
+  Promise.all([
+    loadImage("bulba_facing_left.JPG"),
+    loadImage("bulba_facing_right.JPG"),
+  ]).then(([leftImg, rightImg]) => {
+    const leftSrc = keyOutBackground(leftImg);
+    const rightSrc = keyOutBackground(rightImg);
+
+    const targetHeight = 52;
+    const aspect = rightImg.width / rightImg.height;
+    const targetWidth = Math.round(targetHeight * aspect);
+    bulbaRunner.style.width = `${targetWidth}px`;
+    bulbaRunner.style.height = `${targetHeight}px`;
+
+    function updateFacing() {
+      bulbaRunnerImg.src = direction === 1 ? rightSrc : leftSrc;
+    }
+
+    function animate(timestamp) {
+      if (!lastTime) lastTime = timestamp;
+      const delta = timestamp - lastTime;
       lastTime = timestamp;
+
+      const maxX = Math.max(0, pixelRunway.clientWidth - targetWidth);
+      position += direction * (speedPxPerSec * delta) / 1000;
+
+      if (position >= maxX) {
+        position = maxX;
+        direction = -1;
+        updateFacing();
+      } else if (position <= 0) {
+        position = 0;
+        direction = 1;
+        updateFacing();
+      }
+
+      bulbaRunner.style.left = `${position}px`;
+      window.requestAnimationFrame(animate);
     }
 
-    const delta = timestamp - lastTime;
-    lastTime = timestamp;
-
-    const maxX = Math.max(0, pixelRunway.clientWidth - frameW);
-    position += direction * (speedPxPerSec * delta) / 1000;
-
-    if (position >= maxX) {
-      position = maxX;
-      direction = -1;
-      applyDirectionFacing();
-      frameIndex = 0;
-    } else if (position <= 0) {
-      position = 0;
-      direction = 1;
-      applyDirectionFacing();
-      frameIndex = 0;
-    }
-
-    bulbaRunner.style.left = `${position}px`;
-    frameTimer += delta;
-    if (frameTimer >= frameMs) {
-      applyFrame();
-      frameTimer = 0;
-    }
-
-    window.requestAnimationFrame(animateBulba);
-  }
-
-  const spriteImage = new Image();
-  spriteImage.onload = () => {
-    frameW = Math.floor(spriteImage.width / spriteConfig.cols);
-    frameH = Math.floor(spriteImage.height / spriteConfig.rows);
-    bulbaRunner.style.width = `${frameW}px`;
-    bulbaRunner.style.height = `${frameH}px`;
-
-    stripSpriteBackground(spriteImage);
-    applyDirectionFacing();
+    updateFacing();
 
     if (prefersReducedMotion) {
+      bulbaRunner.classList.remove("is-running");
       bulbaRunner.style.left = "0px";
-      const frameY = spriteConfig.runRow * frameH;
-      bulbaRunner.style.backgroundPosition = `-${framesRight[0] * frameW}px -${frameY}px`;
       return;
     }
 
-    applyFrame();
-    window.requestAnimationFrame(animateBulba);
-  };
-  spriteImage.src = "bulba_sprite_sheet.png";
+    bulbaRunner.classList.add("is-running");
+    window.requestAnimationFrame(animate);
+  }).catch(() => {
+    // If image loading fails, hide the runner instead of showing broken UI.
+    bulbaRunner.style.display = "none";
+  });
 }
