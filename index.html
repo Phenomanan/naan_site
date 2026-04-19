@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Naan Doshi — Security Engineer</title>
+    <meta
+      name="description"
+      content="Manan 'Naan' Doshi — Senior Security Engineer specializing in SIEM, detection engineering, and cloud-native security infrastructure."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Serif:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="grain"></div>
+
+    <header class="hero" id="top">
+      <nav class="nav container">
+        <a class="brand" href="#top">Naan Doshi</a>
+        <button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">
+          Menu
+        </button>
+        <ul class="nav-links">
+          <li><a href="#about">About</a></li>
+          <li><a href="#experience">Experience</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#side-quests">Side Quests</a></li>
+          <li><a href="#speaking">Speaking</a></li>
+          <li><a href="#education">Education</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+        <button class="dark-toggle" id="darkToggle" aria-label="Toggle dark mode">🌙</button>
+      </nav>
+
+      <section class="hero-content container reveal">
+        <div class="hero-layout">
+          <div>
+            <p class="eyebrow">Senior Security Engineer</p>
+            <h1>
+              I build detection systems and cloud security infrastructure that scale.
+            </h1>
+            <p class="lede">
+              Security engineer with 10+ years of experience in SIEM engineering, detection-as-code,
+              incident response, and cloud-native security on GCP.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="#contact">Get In Touch</a>
+            </div>
+          </div>
+          <aside class="profile-card card" aria-label="Profile picture">
+            <img src="pictures/profile.JPG" alt="Profile picture of Manan Naan Doshi" />
+          </aside>
+        </div>
+      </section>
+    </header>
+
+    <main>
+      <section id="about" class="section container reveal">
+        <div class="section-heading">
+          <p class="eyebrow">Profile</p>
+          <h2>About Me</h2>
+        </div>
+        <div class="card">
+          <p>
+            I am a security engineer based in New York focused on building scalable detection systems,
+            cloud security infrastructure, and high-signal incident response programs.
+            I thrive at the intersection of software engineering and security operations,
+            turning complex threat landscapes into automated, measurable defenses.
+          </p>
+          <ul class="highlights">
+            <li>Led enterprise SIEM migration reducing annual costs by 70% while scaling log ingestion 10x (100GB → 1TB/day)</li>
+            <li>Reduced time-to-triage and mobilization by over 50% through IR tooling and workflow automation</li>
+            <li>Led Etsy's Asian &amp; Pacific Islander ERG for 3 years, building community and mentorship programs</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="experience" class="section container reveal">
+        <div class="section-heading">
+          <p class="eyebrow">Career</p>
+          <h2>Experience</h2>
+        </div>
+        <div class="timeline">
+          <article class="timeline-item card">
+            <h3>Senior Security Engineer II</h3>
+            <p class="meta">Etsy • September 2019 – Present • Brooklyn, NY</p>
+            <p>
+              Led a multi-team migration to an enterprise SIEM, reducing annual costs by 70% while
+              scaling log ingestion from 100GB to 1TB per day. Designed a distributed log ingestion
+              pipeline using GCP Dataflow, Pub/Sub, and Python, fully managed by Terraform across
+              40+ log sources. Built a Detection-as-Code pipeline via Python and GitHub Actions for
+              version-controlled rule development and automated testing. Developed IR tooling
+              integrating Slack, PagerDuty, and incident.io, cutting time-to-triage by over 50%.
+              Built a metrics pipeline feeding BigQuery and Looker for executive-level SecOps visibility.
+            </p>
+          </article>
+          <article class="timeline-item card">
+            <h3>Interim Manager, Security Operations</h3>
+            <p class="meta">Etsy • June 2025 – Feb 2026 • Brooklyn, NY</p>
+            <p>
+              Defined and implemented KPIs for incident response, detection, and logging, enabling
+              data-driven reporting to senior leadership. Expanded incident response to support joint
+              incidents and external partners by establishing operational SLAs, escalation paths,
+              and ownership models. Led cross-training initiatives to strengthen security domain
+              expertise and engineering capability across the team.
+            </p>
+          </article>
+          <article class="timeline-item card">
+            <h3>Security Engineer</h3>
+            <p class="meta">NIKSUN • June 2016 – August 2019 • Princeton, NJ</p>
+            <p>
+              Developed a malware sandboxing tool integrated with a network file-capture product,
+              delivering automated analysis to customers. Built a DDoS mitigation system that
+              dynamically pushed traffic-filtering routes to local routers.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="projects" class="section container reveal">
+        <div class="section-heading">
+          <p class="eyebrow">Impact</p>
+          <h2>Selected Projects</h2>
+        </div>
+        <div class="project-grid">
+          <article class="project card">
+            <h3>Enterprise SIEM Migration</h3>
+            <p>
+              Led a multi-team migration to a new enterprise SIEM, achieving a 70% cost reduction
+              while scaling log ingestion 10x to over 1TB per day across 40+ sources.
+            </p>
+            <p class="tech">GCP Dataflow • Pub/Sub • Python • Terraform</p>
+          </article>
+          <article class="project card">
+            <h3>Detection-as-Code Pipeline</h3>
+            <p>
+              Built a version-controlled detection engineering workflow using GitHub Actions,
+              enabling automated testing and deployment of Yara-L rules in dev and prod.
+            </p>
+            <p class="tech">Python • GitHub Actions • Yara-L</p>
+          </article>
+          <article class="project card">
+            <h3>IR Automation &amp; Metrics Platform</h3>
+            <p>
+              Developed IR tooling integrating Slack, PagerDuty, and incident.io, cutting
+              mobilization time by 50%. Built a BigQuery + Looker metrics pipeline for executive
+              security operations reporting.
+            </p>
+            <p class="tech">Python • BigQuery • Looker • PagerDuty</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="side-quests" class="section container reveal">
+        <div class="section-heading">
+          <p class="eyebrow">Beyond Work</p>
+          <h2>Side Quests</h2>
+        </div>
+        <div class="quest-grid">
+          <article class="card quest-item">
+            <img
+              class="quest-main-image expandable-image"
+              src="pictures/side_quests/spartan_race_fenway/spartan_1.jpeg"
+              alt="Spartan Race at Fenway Park in 2024"
+              tabindex="0" role="button" aria-label="Expand Spartan Race at Fenway Park photo"
+            />
+            <h3>Spartan Race Fenway (2024)</h3>
+            <p>
+              Completed a Spartan race in Fenway Park: 3 miles featuring 20 strength and endurance
+              obstacles while running repeated stair and bleacher circuits.
+            </p>
+            <div class="quest-gallery">
+              <img src="pictures/side_quests/spartan_race_fenway/spartan_2.PNG" alt="Spartan race obstacle photo 2" class="expandable-image" tabindex="0" role="button" aria-label="Expand Spartan race obstacle photo 2" />
+              <img src="pictures/side_quests/spartan_race_fenway/spartan_3.PNG" alt="Spartan race obstacle photo 3" class="expandable-image" tabindex="0" role="button" aria-label="Expand Spartan race obstacle photo 3" />
+              <img src="pictures/side_quests/spartan_race_fenway/spartan_4.PNG" alt="Spartan race obstacle photo 4" class="expandable-image" tabindex="0" role="button" aria-label="Expand Spartan race obstacle photo 4" />
+            </div>
+          </article>
+          <article class="card quest-item">
+            <img
+              class="quest-main-image expandable-image"
+              src="pictures/side_quests/half_marathon_brooklyn/half_medal.jpeg"
+              alt="Brooklyn Experience Half Marathon 2025 medal"
+              tabindex="0" role="button" aria-label="Expand Brooklyn half marathon medal photo"
+            />
+            <h3>Brooklyn Experience Half Marathon (2025)</h3>
+            <p>
+              Ran the Brooklyn Experience Half Marathon in 2025, combining long-distance discipline
+              with consistent training and race-day execution.
+            </p>
+            <div class="quest-gallery">
+              <img src="pictures/side_quests/half_marathon_brooklyn/half.JPEG" alt="Brooklyn Experience Half Marathon 2025 finish photo" class="expandable-image" tabindex="0" role="button" aria-label="Expand Brooklyn Experience Half Marathon finish photo" />
+              <img src="pictures/side_quests/half_marathon_brooklyn/half_banner.jpeg" alt="Brooklyn half marathon banner photo" class="expandable-image" tabindex="0" role="button" aria-label="Expand Brooklyn half marathon banner photo" />
+            </div>
+          </article>
+          <article class="card quest-item">
+            <img
+              class="quest-main-image expandable-image"
+              src="pictures/side_quests/ragnar_relay_CT_to_MA/ragnar_medal.jpeg"
+              alt="Ragnar Relay medal from the 2024 relay"
+              tabindex="0" role="button" aria-label="Expand Ragnar Relay medal photo"
+            />
+            <h3>Ragnar Relay CT to MA (2024)</h3>
+            <p>
+              Completed Ragnar Relay with a 12-person team covering 200 miles together over 30 hours,
+              coordinating pacing, handoffs, recovery, and teamwork under fatigue.
+            </p>
+            <div class="quest-gallery">
+              <img src="pictures/side_quests/ragnar_relay_CT_to_MA/ragnar_1.jpg" alt="Ragnar Relay CT to MA 2024 team photo" class="expandable-image" tabindex="0" role="button" aria-label="Expand Ragnar Relay team photo" />
+              <img src="pictures/side_quests/ragnar_relay_CT_to_MA/ragnar_2.jpg" alt="Ragnar Relay course photo" class="expandable-image" tabindex="0" role="button" aria-label="Expand Ragnar Relay course photo" />
+              <img src="pictures/side_quests/ragnar_relay_CT_to_MA/ragnar_3.jpg" alt="Ragnar Relay team moment" class="expandable-image" tabindex="0" role="button" aria-label="Expand Ragnar Relay team moment" />
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="speaking" class="section container reveal">
+        <div class="section-heading">
+          <p class="eyebrow">Public Work</p>
+          <h2>Speaking &amp; Press</h2>
+        </div>
+        <div class="speaking-grid">
+          <article class="card speaking-item">
+            <p class="speaking-label">Conference Talk</p>
+            <h3>Etsy and the Art of SIEM Migration</h3>
+            <p class="meta">Google Cloud Summit '24</p>
+            <p>A deep-dive into how Etsy executed a one-week SIEM migration at scale, reducing costs by 70% while expanding coverage 10x.</p>
+            <a class="btn btn-outline" href="https://youtu.be/jviz41kMhoU" target="_blank" rel="noopener">Watch on YouTube</a>
+          </article>
+          <article class="card speaking-item">
+            <p class="speaking-label">Podcast</p>
+            <h3>One Week SIEM Migration: Fact or Fiction?</h3>
+            <p class="meta">Google Security Podcast — Episode 184</p>
+            <p>Featured on Google's cloud security podcast to discuss the engineering and strategy behind the Etsy SIEM migration.</p>
+            <a class="btn btn-outline" href="https://cloud.withgoogle.com/cloudsecurity/podcast/ep184-one-week-siem-migration-fact-or-fiction" target="_blank" rel="noopener">Listen to Episode</a>
+          </article>
+          <article class="card speaking-item">
+            <p class="speaking-label">Blog Post</p>
+            <h3>One Week Wonder</h3>
+            <p class="meta">Google Cloud Blog</p>
+            <p>Google Cloud featured the Etsy SIEM migration story as a case study in rapid, high-quality security transformation.</p>
+            <a class="btn btn-outline" href="https://cloud.google.com/transform/one-week-wonder-how-etsy-mastered-the-art-of-siem-migration" target="_blank" rel="noopener">Read Article</a>
+          </article>
+        </div>
+      </section>
+
+      <section id="education" class="section container reveal">
+        <div class="section-heading">
+          <p class="eyebrow">Background</p>
+          <h2>Education &amp; Recognition</h2>
+        </div>
+        <div class="card">
+          <h3>Rutgers University</h3>
+          <p class="meta">B.S. Computer Science, Minor in Economics • 2012–2016 • New Brunswick, NJ</p>
+        </div>
+        <br />
+        <div class="card">
+          <h3>Certifications</h3>
+          <ul class="highlights">
+            <li>CompTIA Security+</li>
+            <li>GCP Professional Security Engineer</li>
+            <li>SANS Web Application Security</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section container reveal">
+        <div class="section-heading">
+          <p class="eyebrow">Capabilities</p>
+          <h2>Skills</h2>
+        </div>
+        <div class="skills card">
+          <span>Detection Engineering</span>
+          <span>Incident Response</span>
+          <span>SIEM Engineering</span>
+          <span>Threat Hunting</span>
+          <span>Python</span>
+          <span>GCP</span>
+          <span>Terraform</span>
+          <span>SQL</span>
+          <span>Engineering Leadership</span>
+          <span>Software Engineering</span>
+        </div>
+      </section>
+
+      <section id="contact" class="section container reveal">
+        <div class="section-heading">
+          <p class="eyebrow">Reach Out</p>
+          <h2>Contact</h2>
+        </div>
+        <div class="card contact-card">
+          <p class="open-to-work">🟢 Open to Security Engineering roles (IC)</p>
+          <p>
+            Interested in working together? I'm looking for individual contributor Security
+            Engineering roles where I can focus on detection, infrastructure, and building
+            things. Reach out on LinkedIn!
+          </p>
+          <div class="contact-links">
+            <a class="btn btn-primary" href="https://www.linkedin.com/in/manandoshi1" target="_blank" rel="noopener">Connect on LinkedIn</a>
+            <a class="btn btn-outline" href="https://github.com/Phenomanan" target="_blank" rel="noopener">GitHub</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer container">
+      <p>© <span id="year"></span> Manan "Naan" Doshi. Built with intention.</p>
+    </footer>
+
+    <div id="imageLightbox" class="lightbox" aria-hidden="true">
+      <button id="lightboxClose" class="lightbox-close" aria-label="Close expanded image">×</button>
+      <img id="lightboxImage" class="lightbox-image" src="" alt="Expanded side quest image" />
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
