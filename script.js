@@ -7,6 +7,7 @@ const expandableImages = document.querySelectorAll(".expandable-image");
 const lightbox = document.getElementById("imageLightbox");
 const lightboxImage = document.getElementById("lightboxImage");
 const lightboxClose = document.getElementById("lightboxClose");
+const bulbaRunner = document.getElementById("bulbaRunner");
 
 if (yearTarget) {
   yearTarget.textContent = String(new Date().getFullYear());
@@ -18,7 +19,7 @@ const savedTheme = localStorage.getItem("theme");
 
 function setDark(on) {
   document.documentElement.classList.toggle("dark", on);
-  if (darkToggle) darkToggle.textContent = on ? "☀️" : "🌙";
+  if (darkToggle) darkToggle.textContent = on ? "☀️ Light" : "🌙 Dark";
   localStorage.setItem("theme", on ? "dark" : "light");
 }
 
@@ -112,3 +113,16 @@ document.addEventListener("keydown", (event) => {
     closeLightbox();
   }
 });
+
+if (bulbaRunner) {
+  // Frames taken from the third sprite row in the provided 32x32 atlas.
+  const bulbaFrames = [0, 32, 64, 96, 128, 160];
+  const frameY = 96;
+  let frameIndex = 0;
+
+  setInterval(() => {
+    const x = bulbaFrames[frameIndex];
+    bulbaRunner.style.backgroundPosition = `-${x}px -${frameY}px`;
+    frameIndex = (frameIndex + 1) % bulbaFrames.length;
+  }, 130);
+}
