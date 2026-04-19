@@ -1,6 +1,5 @@
 # Header
 Manan “Naan” Doshi
-naandoshi0@gmail.com
 www.linkedin.com/in/manandoshi1
 New York, NY
 
