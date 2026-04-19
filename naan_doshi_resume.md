@@ -8,6 +8,7 @@ New York, NY
 **Etsy - Senior Security Engineer II**                                                          September 2019 - Present Brooklyn, NY
 * Led a multi-team migration to an enterprise SIEM, reducing annual costs by 70% while increasing log ingestion volume from 100GB per day to 1TB per day (10x).
 * Designed and implemented a distributed log ingestion pipeline using GCP Dataflow, Pub/Sub, and custom Python services, all fully managed by Terraform- complete with error handling, failure recovery, and auto-scaling infrastructure across 40+ log sources.
+* Built an AI threat hunting tool which connects to our SIEM and EDR via MCP, which searches for new CVEs and zero-day exploits across all logs and endpoints, and then generates a report with all its findings.
 * Developed internal incident response tooling and automations integrating Slack, Pagerduty, and incident.io, reducing time-to-triage and mobilization by \>50% each through context enrichment and workflow orchestration.
 * Built a metrics pipeline in Python which feeds IR and detection data into BigQuery and Looker, enabling executive-level visibility into security operations performance.
 * Built a Detection-as-code pipeline using Python and Github Actions to enable version controlled rule development, simplify Yara-L rule writing, and automate testing and deployment in both dev and prod environments. Developed and tuned dozens of custom detections across various environments, identifying anomalous behavior and improving detection coverage while reducing false positives.
@@ -20,7 +21,7 @@ New York, NY
 
 **NIKSUN - Security Engineer**                                                                June 2016 - August 2019 Princeton, NJ 
 * Developed a malware sandboxing tool integrated with a network file-capture product, delivering automated analysis results to customers. 
-* Built a DDoS mitigation system that dynamically pushed traffic-filtering routes to local routers to block 
+* Built a DDoS mitigation system that dynamically pushed traffic-filtering routes to local routers to block malicious traffic and prevent flooding.
 
 # Education
 Rutgers University (New Brunswick) - 2012-2016 
