@@ -55,6 +55,7 @@ body {
   justify-content: space-between;
   padding: 1.5rem 0;
   position: relative;
+  z-index: 100;
 }
 
 .brand {
@@ -73,6 +74,10 @@ body {
   padding: 0.45rem 0.8rem;
   border-radius: 999px;
   font-family: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+  position: relative;
+  z-index: 130;
 }
 
 .nav-links {
@@ -384,6 +389,9 @@ h1 {
   font-size: 1rem;
   cursor: pointer;
   line-height: 1;
+  touch-action: manipulation;
+  position: relative;
+  z-index: 130;
 }
 
 /* Dark mode */
@@ -496,6 +504,11 @@ h1 {
 }
 
 @media (max-width: 760px) {
+  .nav {
+    gap: 0.45rem;
+    flex-wrap: wrap;
+  }
+
   .menu-toggle {
     display: inline-block;
   }
@@ -511,6 +524,8 @@ h1 {
     border-radius: 12px;
     padding: 0.8rem;
     width: min(240px, 90vw);
+    z-index: 150;
+    pointer-events: auto;
   }
 
   .nav-links.open {
