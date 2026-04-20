@@ -115,8 +115,8 @@ document.addEventListener("keydown", (event) => {
 if (bulbaRunner && bulbaRunnerImg && pixelRunway) {
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const assetVersion = "20260419b";
-  const leftAsset = `bulba_facing_left.JPG?v=${assetVersion}`;
-  const rightAsset = `bulba_facing_right.JPG?v=${assetVersion}`;
+  const leftAsset = `assets/sprites/bulba_facing_left.JPG?v=${assetVersion}`;
+  const rightAsset = `assets/sprites/bulba_facing_right.JPG?v=${assetVersion}`;
   const frameCount = 4;
   let direction = 1;
   let position = 0;
