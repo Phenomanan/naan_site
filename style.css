@@ -838,6 +838,19 @@ h1 .ink::after {
   color: var(--accent-ink);
 }
 
+.project-link {
+  align-self: flex-start;
+  margin-top: 0.7rem;
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--accent-ink);
+  text-decoration: none;
+}
+
+.project-link:hover {
+  text-decoration: underline;
+}
+
 .chips {
   list-style: none;
   padding: 0;
@@ -1478,6 +1491,34 @@ h1 .ink::after {
 }
 
 @media (max-width: 480px) {
+  /* comfortable tap targets */
+  .menu-toggle,
+  .dark-toggle {
+    min-height: 40px;
+    padding-inline: 0.85rem;
+  }
+
+  .card {
+    padding: 1.1rem;
+  }
+
+  .timeline {
+    padding-left: 1.6rem;
+  }
+
+  .timeline-item::before {
+    left: calc(-1.6rem + 0.55rem - 7px);
+  }
+
+  .cert-list {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .project-link {
+    padding: 0.35rem 0;
+  }
+
   .footer-hint {
     display: block;
     margin: 0.2rem 0 0;
