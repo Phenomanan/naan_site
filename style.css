@@ -953,6 +953,15 @@ h1 .ink::after {
   margin: 0;
 }
 
+.quest-item p strong {
+  color: var(--accent-ink);
+}
+
+.chips.quest-chips {
+  margin: 0;
+  padding-top: 0;
+}
+
 .quest-stamp {
   position: absolute;
   top: -11px;

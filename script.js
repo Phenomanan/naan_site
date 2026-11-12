@@ -22,7 +22,7 @@ function safeStorage(action, key, value) {
     if (action === "get") return localStorage.getItem(key);
     localStorage.setItem(key, value);
   } catch (e) {
-    /* storage unavailable (private mode, blocked) — ignore */
+    /* storage unavailable (private mode, blocked); ignore */
   }
   return null;
 }
@@ -98,7 +98,9 @@ if ("IntersectionObserver" in window) {
         }
       });
     },
-    { threshold: 0.12 }
+    // Height-independent trigger: reveal once the section's top edge is 8% into the viewport.
+    // (A ratio threshold can never be met by sections much taller than the screen.)
+    { threshold: 0, rootMargin: "0px 0px -8% 0px" }
   );
   revealItems.forEach((item) => observer.observe(item));
 
