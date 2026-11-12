@@ -1,5 +1,6 @@
 const menuToggle = document.querySelector(".menu-toggle");
 const navLinks = document.querySelector(".nav-links");
+const siteNav = document.getElementById("siteNav");
 const yearTarget = document.getElementById("year");
 const revealItems = document.querySelectorAll(".reveal");
 const darkToggle = document.getElementById("darkToggle");
@@ -7,32 +8,50 @@ const expandableImages = document.querySelectorAll(".expandable-image");
 const lightbox = document.getElementById("imageLightbox");
 const lightboxImage = document.getElementById("lightboxImage");
 const lightboxClose = document.getElementById("lightboxClose");
-const bulbaRunner = document.getElementById("bulbaRunner");
-const bulbaRunnerImg = document.getElementById("bulbaRunnerImg");
-const pixelRunway = document.querySelector(".pixel-runway");
+const scrollProgress = document.getElementById("scrollProgress");
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 if (yearTarget) {
   yearTarget.textContent = String(new Date().getFullYear());
 }
 
-// Dark mode
-const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-const savedTheme = localStorage.getItem("theme");
-
-function setDark(on) {
-  document.documentElement.classList.toggle("dark", on);
-  if (darkToggle) darkToggle.textContent = on ? "☀️ Light" : "🌙 Dark";
-  localStorage.setItem("theme", on ? "dark" : "light");
+/* ---------- Theme ---------- */
+// The initial class is applied by the inline script in <head> to avoid a flash.
+function safeStorage(action, key, value) {
+  try {
+    if (action === "get") return localStorage.getItem(key);
+    localStorage.setItem(key, value);
+  } catch (e) {
+    /* storage unavailable (private mode, blocked) — ignore */
+  }
+  return null;
 }
 
-setDark(savedTheme === "dark" || (!savedTheme && prefersDark));
+function syncToggleLabel() {
+  if (!darkToggle) return;
+  const isDark = document.documentElement.classList.contains("dark");
+  darkToggle.textContent = isDark ? "☀️ Light" : "🌙 Dark";
+}
+
+syncToggleLabel();
 
 if (darkToggle) {
   darkToggle.addEventListener("click", () => {
-    setDark(!document.documentElement.classList.contains("dark"));
+    const next = !document.documentElement.classList.contains("dark");
+    document.documentElement.classList.toggle("dark", next);
+    safeStorage("set", "theme", next ? "dark" : "light");
+    syncToggleLabel();
   });
 }
 
+// Follow OS changes until the visitor picks a theme explicitly.
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", (event) => {
+  if (safeStorage("get", "theme")) return;
+  document.documentElement.classList.toggle("dark", event.matches);
+  syncToggleLabel();
+});
+
+/* ---------- Mobile menu ---------- */
 if (menuToggle && navLinks) {
   menuToggle.addEventListener("click", () => {
     const isOpen = navLinks.classList.toggle("open");
@@ -47,6 +66,28 @@ if (menuToggle && navLinks) {
   });
 }
 
+/* ---------- Scroll: progress bar + nav background ---------- */
+let scrollTicking = false;
+function onScroll() {
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = max > 0 ? window.scrollY / max : 0;
+  if (scrollProgress) scrollProgress.style.transform = `scaleX(${progress})`;
+  if (siteNav) siteNav.classList.toggle("scrolled", window.scrollY > 12);
+  scrollTicking = false;
+}
+window.addEventListener(
+  "scroll",
+  () => {
+    if (!scrollTicking) {
+      scrollTicking = true;
+      window.requestAnimationFrame(onScroll);
+    }
+  },
+  { passive: true }
+);
+onScroll();
+
+/* ---------- Reveal + active nav ---------- */
 if ("IntersectionObserver" in window) {
   const observer = new IntersectionObserver(
     (entries) => {
@@ -57,31 +98,72 @@ if ("IntersectionObserver" in window) {
         }
       });
     },
-    { threshold: 0.16 }
+    { threshold: 0.12 }
   );
-
   revealItems.forEach((item) => observer.observe(item));
+
+  const linkById = new Map();
+  navLinks?.querySelectorAll("a[href^='#']").forEach((a) => linkById.set(a.getAttribute("href").slice(1), a));
+  const sectionObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        linkById.forEach((a) => a.classList.remove("active"));
+        linkById.get(entry.target.id)?.classList.add("active");
+      });
+    },
+    { rootMargin: "-40% 0px -55% 0px" }
+  );
+  // Observe the hero too: it has no nav link, so reaching it clears the highlight.
+  ["top", ...linkById.keys()].forEach((id) => {
+    const section = document.getElementById(id);
+    if (section) sectionObserver.observe(section);
+  });
 } else {
   revealItems.forEach((item) => item.classList.add("visible"));
 }
 
+/* ---------- Stat count-up ---------- */
+function countUp() {
+  const counters = document.querySelectorAll(".count[data-target]");
+  if (prefersReducedMotion) return;
+  counters.forEach((el) => {
+    const target = Number(el.dataset.target);
+    const duration = 1200;
+    const start = performance.now();
+    el.textContent = "0";
+    function tick(now) {
+      const t = Math.min(1, (now - start) / duration);
+      const eased = 1 - Math.pow(1 - t, 3);
+      el.textContent = String(Math.round(target * eased));
+      if (t < 1) window.requestAnimationFrame(tick);
+    }
+    window.requestAnimationFrame(tick);
+  });
+}
+window.setTimeout(countUp, 350);
+
+/* ---------- Lightbox ---------- */
+let lastFocused = null;
+
 function openLightbox(sourceImage) {
   if (!lightbox || !lightboxImage) return;
-
-  lightboxImage.src = sourceImage.src;
+  lastFocused = sourceImage;
+  lightboxImage.src = sourceImage.dataset.full || sourceImage.src;
   lightboxImage.alt = sourceImage.alt || "Expanded side quest image";
   lightbox.classList.add("open");
   lightbox.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
+  lightboxClose?.focus();
 }
 
 function closeLightbox() {
   if (!lightbox || !lightboxImage) return;
-
   lightbox.classList.remove("open");
   lightbox.setAttribute("aria-hidden", "true");
-  lightboxImage.src = "";
+  lightboxImage.removeAttribute("src");
   document.body.style.overflow = "";
+  lastFocused?.focus();
 }
 
 expandableImages.forEach((image) => {
@@ -94,173 +176,189 @@ expandableImages.forEach((image) => {
   });
 });
 
-if (lightboxClose) {
-  lightboxClose.addEventListener("click", closeLightbox);
-}
-
-if (lightbox) {
-  lightbox.addEventListener("click", (event) => {
-    if (event.target === lightbox) {
-      closeLightbox();
-    }
-  });
-}
-
+lightboxClose?.addEventListener("click", closeLightbox);
+lightbox?.addEventListener("click", (event) => {
+  if (event.target === lightbox) closeLightbox();
+});
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && lightbox?.classList.contains("open")) {
-    closeLightbox();
-  }
+  if (event.key === "Escape" && lightbox?.classList.contains("open")) closeLightbox();
 });
 
-if (bulbaRunner && bulbaRunnerImg && pixelRunway) {
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const assetVersion = "20260419b";
-  const leftAsset = `assets/sprites/bulba_facing_left.JPG?v=${assetVersion}`;
-  const rightAsset = `assets/sprites/bulba_facing_right.JPG?v=${assetVersion}`;
-  const frameCount = 4;
-  let direction = 1;
-  let position = 0;
+/* ---------- Bulbasaur mascot ---------- */
+(function bulbasaur() {
+  const runway = document.getElementById("pixelRunway");
+  const runner = document.getElementById("bulbaRunner");
+  const bubble = document.getElementById("bulbaBubble");
+  if (!runway || !runner || !bubble) return;
+
+  const quips = [
+    "Rotate your secrets 🌱",
+    "Least privilege, most vibes",
+    "Logs or it didn't happen",
+    "Ran 200 mi for this?",
+    "Alert fatigue? Not today.",
+    "Detection-as-code 🌿",
+    "Patch Tuesday? Every day.",
+    "Have you tried MFA?",
+    "Dumpling break? 🥟",
+    "Bulba-bulba! 🍃",
+    "Zero trust, full heart",
+    "Ship fast, ship safe",
+  ];
+  let quipIndex = Math.floor(Math.random() * quips.length);
+  let bubbleTimer = 0;
+
+  // Keep the speech bubble inside the runway even when the runner is near an edge.
+  function clampBubble() {
+    const half = bubble.offsetWidth / 2;
+    const center = x + runner.offsetWidth / 2;
+    const pad = 4;
+    let shift = 0;
+    if (center - half < pad) shift = pad - (center - half);
+    else if (center + half > runway.clientWidth - pad) shift = runway.clientWidth - pad - (center + half);
+    bubble.style.setProperty("--shift", `${shift}px`);
+  }
+
+  function say(text) {
+    bubble.textContent = text || quips[quipIndex++ % quips.length];
+    clampBubble();
+    bubble.classList.add("show");
+    window.clearTimeout(bubbleTimer);
+    bubbleTimer = window.setTimeout(() => bubble.classList.remove("show"), 2200);
+  }
+
+  function burstLeaves() {
+    const count = 7;
+    const baseX = x + runner.offsetWidth / 2;
+    const baseY = runway.clientHeight - 14 - runner.offsetHeight * 0.6;
+    for (let i = 0; i < count; i += 1) {
+      const leaf = document.createElement("span");
+      leaf.className = "leaf";
+      leaf.style.left = `${baseX}px`;
+      leaf.style.top = `${baseY}px`;
+      const angle = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.1;
+      const dist = 34 + Math.random() * 30;
+      leaf.style.setProperty("--dx", `${Math.cos(angle) * dist}px`);
+      leaf.style.setProperty("--dy", `${Math.sin(angle) * dist}px`);
+      leaf.style.setProperty("--rot", `${(Math.random() - 0.5) * 540}deg`);
+      runway.appendChild(leaf);
+      leaf.addEventListener("animationend", () => leaf.remove());
+    }
+  }
+
+  let x = 0;
+  let dir = 1;
+  let speed = 70;
+  let state = "walking";
+  let stateUntil = 0;
   let lastTime = 0;
-  let frameTimer = 0;
-  let frameIndex = 0;
-  const speedPxPerSec = 78;
-  const frameMs = 120;
+  let running = false;
+  let visible = true;
+  let jumping = false;
 
-  function loadImage(src) {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.onload = () => resolve(img);
-      img.onerror = reject;
-      img.src = src;
-    });
+  function maxX() {
+    return Math.max(0, runway.clientWidth - runner.offsetWidth);
   }
 
-  function makeTransparentFrameStripFrames(sourceImage) {
-    const frames = [];
-    for (let index = 0; index < frameCount; index += 1) {
-      const startX = Math.round((index * sourceImage.width) / frameCount);
-      const endX = Math.round(((index + 1) * sourceImage.width) / frameCount);
-      const frameWidth = endX - startX;
-      const canvas = document.createElement("canvas");
-      canvas.width = frameWidth;
-      canvas.height = sourceImage.height;
-      const ctx = canvas.getContext("2d", { willReadFrequently: true });
-      if (!ctx) {
-        continue;
+  function setState(next, now) {
+    state = next;
+    runner.classList.toggle("walking", next === "walking");
+    runner.classList.toggle("idle", next === "idle");
+    if (next === "walking") {
+      speed = 55 + Math.random() * 45;
+      stateUntil = now + 2500 + Math.random() * 4500;
+    } else {
+      stateUntil = now + 1400 + Math.random() * 2200;
+      if (Math.random() < 0.55) say();
+      else if (Math.random() < 0.4) jump(false);
+      // sometimes turn around while resting
+      if (Math.random() < 0.35) {
+        dir *= -1;
+        runner.classList.toggle("left", dir === -1);
       }
-
-      ctx.drawImage(
-        sourceImage,
-        startX,
-        0,
-        frameWidth,
-        sourceImage.height,
-        0,
-        0,
-        frameWidth,
-        sourceImage.height
-      );
-
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const data = imageData.data;
-      const cornerIndexes = [
-        0,
-        (canvas.width - 1) * 4,
-        (canvas.width * (canvas.height - 1)) * 4,
-        (canvas.width * canvas.height - 1) * 4,
-      ];
-      const samples = cornerIndexes.map((idx) => ({
-        r: data[idx],
-        g: data[idx + 1],
-        b: data[idx + 2],
-        a: data[idx + 3],
-      }));
-      const opaqueSample = samples.find((sample) => sample.a > 0);
-
-      if (opaqueSample) {
-        const threshold = 60;
-        for (let i = 0; i < data.length; i += 4) {
-          const dr = Math.abs(data[i] - opaqueSample.r);
-          const dg = Math.abs(data[i + 1] - opaqueSample.g);
-          const db = Math.abs(data[i + 2] - opaqueSample.b);
-          if (dr <= threshold && dg <= threshold && db <= threshold) {
-            data[i + 3] = 0;
-          }
-        }
-        ctx.putImageData(imageData, 0, 0);
-      }
-
-      frames.push({
-        src: canvas.toDataURL("image/png"),
-        width: frameWidth,
-        height: sourceImage.height,
-      });
     }
-    return frames;
   }
 
-  Promise.all([loadImage(leftAsset), loadImage(rightAsset)]).then(([leftImg, rightImg]) => {
-    const leftFrames = makeTransparentFrameStripFrames(leftImg);
-    const rightFrames = makeTransparentFrameStripFrames(rightImg);
-    const allFrames = [...leftFrames, ...rightFrames];
-    const maxFrameWidth = Math.max(...allFrames.map((frame) => frame.width));
-    const maxFrameHeight = Math.max(...allFrames.map((frame) => frame.height));
-    const targetHeight = 52;
-    const targetWidth = Math.round((targetHeight * maxFrameWidth) / maxFrameHeight);
+  function jump(withLeaves) {
+    if (jumping) return;
+    jumping = true;
+    runner.classList.remove("jumping");
+    void runner.offsetWidth; // restart animation
+    runner.classList.add("jumping");
+    if (withLeaves) burstLeaves();
+    window.setTimeout(() => {
+      runner.classList.remove("jumping");
+      jumping = false;
+    }, 620);
+  }
 
-    bulbaRunner.style.width = `${targetWidth}px`;
-    bulbaRunner.style.height = `${targetHeight}px`;
+  function frame(now) {
+    if (!running) return;
+    if (!lastTime) lastTime = now;
+    const delta = Math.min(64, now - lastTime);
+    lastTime = now;
 
-    function updateFacingFrame() {
-      const frames = direction === 1 ? rightFrames : leftFrames;
-      const currentFrame = frames[frameIndex % frames.length];
-      if (currentFrame) {
-        bulbaRunnerImg.src = currentFrame.src;
+    if (now > stateUntil) setState(state === "walking" ? "idle" : "walking", now);
+
+    if (state === "walking") {
+      x += dir * (speed * delta) / 1000;
+      const limit = maxX();
+      if (x >= limit) {
+        x = limit;
+        dir = -1;
+      } else if (x <= 0) {
+        x = 0;
+        dir = 1;
       }
+      runner.classList.toggle("left", dir === -1);
+      // occasional spontaneous hop
+      if (!jumping && Math.random() < delta / 9000) jump(false);
     }
+    runner.style.transform = `translateX(${x}px)`;
+    if (bubble.classList.contains("show")) clampBubble();
+    window.requestAnimationFrame(frame);
+  }
 
-    function animate(timestamp) {
-      if (!lastTime) lastTime = timestamp;
-      const delta = timestamp - lastTime;
-      lastTime = timestamp;
+  function start() {
+    if (running || prefersReducedMotion || !visible || document.hidden) return;
+    running = true;
+    lastTime = 0;
+    window.requestAnimationFrame(frame);
+  }
 
-      const maxX = Math.max(0, pixelRunway.clientWidth - targetWidth);
-      position += direction * (speedPxPerSec * delta) / 1000;
+  function stop() {
+    running = false;
+  }
 
-      if (position >= maxX) {
-        position = maxX;
-        direction = -1;
-        frameIndex = 0;
-        updateFacingFrame();
-      } else if (position <= 0) {
-        position = 0;
-        direction = 1;
-        frameIndex = 0;
-        updateFacingFrame();
-      }
-
-      bulbaRunner.style.left = `${position}px`;
-      frameTimer += delta;
-      if (frameTimer >= frameMs) {
-        frameIndex = (frameIndex + 1) % frameCount;
-        updateFacingFrame();
-        frameTimer = 0;
-      }
-      window.requestAnimationFrame(animate);
-    }
-
-    updateFacingFrame();
-
+  runner.addEventListener("click", () => {
     if (prefersReducedMotion) {
-      bulbaRunner.classList.remove("is-running");
-      bulbaRunner.style.left = "0px";
+      say();
       return;
     }
-
-    bulbaRunner.classList.add("is-running");
-    window.requestAnimationFrame(animate);
-  }).catch(() => {
-    // If image loading fails, hide the runner instead of showing broken UI.
-    bulbaRunner.style.display = "none";
+    jump(true);
+    say();
   });
-}
+
+  if (prefersReducedMotion) {
+    runner.classList.add("idle");
+    x = Math.min(24, maxX());
+    runner.style.transform = `translateX(${x}px)`;
+    return;
+  }
+
+  setState("walking", performance.now());
+
+  document.addEventListener("visibilitychange", () => (document.hidden ? stop() : start()));
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver((entries) => {
+      visible = entries[0].isIntersecting;
+      if (visible) start();
+      else stop();
+    }).observe(runway);
+  } else {
+    start();
+  }
+  window.addEventListener("resize", () => {
+    x = Math.min(x, maxX());
+  });
+})();

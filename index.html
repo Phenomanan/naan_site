@@ -3,38 +3,62 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
     <title>Naan Doshi — Security Engineer</title>
     <meta
       name="description"
-      content="Manan 'Naan' Doshi — Senior Application Security Engineer specializing in AppSec, SIEM, detection engineering, and cloud-native security infrastructure."
+      content="Manan 'Naan' Doshi — New York-based security engineer building detection, response, cloud, and product security systems, increasingly powered by AI and agents."
     />
+    <script>
+      // Apply theme before first paint to avoid a light-mode flash.
+      (function () {
+        var dark = false;
+        try {
+          var saved = localStorage.getItem("theme");
+          dark = saved ? saved === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+        } catch (e) {
+          dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        }
+        if (dark) document.documentElement.classList.add("dark");
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Serif:wght@500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Serif:wght@500;600&family=JetBrains+Mono:wght@400;600&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="grain"></div>
+    <div class="scroll-progress" aria-hidden="true"><span id="scrollProgress"></span></div>
+    <div class="grain" aria-hidden="true"></div>
 
     <header class="hero" id="top">
-      <nav class="nav container">
-        <a class="brand" href="#top">Naan Doshi</a>
-        <button class="menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">
-          Menu
-        </button>
-        <ul class="nav-links">
-          <li><a href="#about">About</a></li>
-          <li><a href="#experience">Experience</a></li>
-          <li><a href="#projects">Projects</a></li>
-          <li><a href="#speaking">Speaking</a></li>
-          <li><a href="#education">Education</a></li>
-          <li><a href="#side-quests">Side Quests</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-        <button class="dark-toggle" id="darkToggle" type="button" aria-label="Toggle dark mode">🌙 Dark</button>
+      <div class="hero-backdrop" aria-hidden="true">
+        <span class="blob blob-a"></span>
+        <span class="blob blob-b"></span>
+        <span class="dot-grid"></span>
+      </div>
+
+      <nav class="nav" id="siteNav">
+        <div class="nav-inner container">
+          <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true">&gt;_</span> Naan Doshi</a>
+          <button class="menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navLinks">
+            Menu
+          </button>
+          <ul class="nav-links" id="navLinks">
+            <li><a href="#about">About</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#speaking">Speaking</a></li>
+            <li><a href="#education">Education</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#side-quests">Side Quests</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+          <button class="dark-toggle" id="darkToggle" type="button" aria-label="Toggle dark mode">🌙 Dark</button>
+        </div>
       </nav>
 
       <section class="hero-content container reveal">
@@ -42,89 +66,145 @@
           <div>
             <p class="eyebrow">Senior Application Security Engineer</p>
             <h1>
-              I build agentic systems and security programs that scale.
+              I build agentic systems and security programs that <span class="ink">scale.</span>
             </h1>
+            <ul class="hero-tags" aria-label="Focus areas">
+              <li>Security Engineering</li>
+              <li>Detection &amp; Response</li>
+              <li>Cloud Security</li>
+              <li>AI &amp; Agents</li>
+            </ul>
             <p class="lede">
-              New York-based security engineer focused on building AI-native security systems that help
-              engineering teams move faster without sacrificing trust. I thrive at the intersection of
-              software engineering and cybersecurity, and I’m especially interested in agentic application
-              security: systems that can reason across code, context, and risk to scale AppSec across a whole company.
+              New York-based security engineer who builds the systems that keep fast-moving companies safe,
+              from detection pipelines and incident response tooling to cloud infrastructure and product security.
+              I thrive where software engineering meets security, and I’m most excited about AI and agentic
+              systems that can reason across code, infrastructure, and signals to scale security across an
+              entire organization.
             </p>
             <div class="hero-actions">
               <a class="btn btn-primary" href="#contact">Get In Touch</a>
+              <a class="btn btn-outline" href="#projects">See My Work</a>
             </div>
           </div>
-          <aside class="profile-card card" aria-label="Profile picture">
-            <img src="pictures/profile.JPG" alt="Profile picture of Manan Naan Doshi" />
+          <aside class="profile-card" aria-label="Profile picture">
+            <div class="profile-frame">
+              <img
+                src="pictures/profile.jpg"
+                alt="Profile picture of Manan Naan Doshi"
+                width="675" height="900"
+                fetchpriority="high" decoding="async"
+              />
+            </div>
+            <span class="sticker sticker-nyc" aria-hidden="true">📍 NYC</span>
+            <span class="sticker sticker-shield" aria-hidden="true">🛡️</span>
           </aside>
         </div>
+
+        <dl class="stats">
+          <div class="stat">
+            <dt><span class="count" data-target="70">70</span>%</dt>
+            <dd>SIEM cost reduction</dd>
+          </div>
+          <div class="stat">
+            <dt><span class="count" data-target="1">1</span> TB/day</dt>
+            <dd>log pipeline, 40+ sources</dd>
+          </div>
+          <div class="stat">
+            <dt><span class="count" data-target="10">10</span>×</dt>
+            <dd>detection coverage</dd>
+          </div>
+          <div class="stat">
+            <dt><span class="count" data-target="10">10</span> yrs</dt>
+            <dd>building security</dd>
+          </div>
+        </dl>
       </section>
     </header>
 
     <main>
       <section id="about" class="section container reveal">
         <div class="section-heading">
-          <p class="eyebrow">Profile</p>
+          <p class="eyebrow"><span class="num">01</span> Profile</p>
           <h2>About Me</h2>
         </div>
-        <div class="card">
+        <div class="card about-card">
           <p>
-            I’m a New York-based security engineer who thrives at the intersection of software engineering
-            and cybersecurity. I’m especially passionate about applying AI and agentic systems to scale
-            security programs, reduce friction for engineering teams, and turn security into a force multiplier
-            rather than a bottleneck. I like building systems that make it easier for teams to move quickly,
-            understand risk clearly, and operate with security built in from the start.
+            My path through security has been a tour of the whole stack. I started out building network
+            defenses at NIKSUN (malware sandboxes and DDoS mitigation), spent nearly seven years at Etsy
+            running detection engineering, SIEM infrastructure, and incident response (including a stint
+            leading the SecOps team), and now I’m building AI-native security at Handshake.
+          </p>
+          <p>
+            The common thread: I like owning hard problems end to end, from the pipeline design to the
+            dashboard to the conference talk explaining how it all works. I care about making security
+            something engineers actually <em>want</em> to work with. When I’m not at a keyboard, I’m probably
+            training for a race or hunting down the best dumplings in NYC (see
+            <a href="#side-quests">Side Quests</a>).
           </p>
         </div>
       </section>
 
       <section id="experience" class="section container reveal">
         <div class="section-heading">
-          <p class="eyebrow">Career</p>
+          <p class="eyebrow"><span class="num">02</span> Career</p>
           <h2>Experience</h2>
         </div>
-        <div class="timeline">
-          <article class="timeline-item card">
-            <h3>Senior Application Security Engineer</h3>
-            <p class="meta">Handshake • 2026 – Present • New York, NY</p>
-            <p>
-              I was the first AppSec hire at Handshake, and I’m focused on building agentic application security
-              capabilities that can scale across the entire company. My work centers on AI-enabled workflows,
-              secure development tooling, and operating models that help engineering teams move quickly while
-              keeping risk visible, measurable, and manageable.
-            </p>
-          </article>
-          <article class="timeline-item card">
-            <h3>Senior Security Engineer II</h3>
-            <p class="meta">Etsy • September 2019 – 2026 • Brooklyn, NY</p>
-            <p>
-              Core security engineering role focused on detection engineering, SIEM infrastructure, and incident response tooling at scale. Built and maintained the systems that power Etsy's security operations, from log ingestion pipelines to detection-as-code workflows.
-            </p>
-          </article>
-          <article class="timeline-item card">
-            <h3>Interim Manager, Security Operations</h3>
-            <p class="meta">Etsy • June 2025 – Feb 2026 • Brooklyn, NY</p>
-            <p>
-              Stepped into a temporary management role for ~7 months while the team's manager was on leave. Defined SecOps KPIs, expanded the IR program to support external partners, and led cross-training initiatives before returning to my IC engineering role.
-            </p>
-          </article>
-          <article class="timeline-item card">
-            <h3>Security Engineer</h3>
-            <p class="meta">NIKSUN • June 2016 – August 2019 • Princeton, NJ</p>
-            <p>
-              Built security tooling for a network monitoring product company, including a malware sandboxing tool and a DDoS mitigation system that dynamically pushed traffic-filtering routes to local routers to block malicious traffic and prevent flooding.
-            </p>
-          </article>
-        </div>
+        <ol class="timeline">
+          <li class="timeline-item is-current">
+            <article class="card">
+              <span class="now-badge">Now</span>
+              <h3>Senior Application Security Engineer</h3>
+              <p class="meta">Handshake • 2026 – Present • New York, NY</p>
+              <p>
+                I was the first AppSec hire at Handshake, and I’m focused on building agentic application security
+                capabilities that can scale across the entire company. My work centers on AI-enabled workflows,
+                secure development tooling, and operating models that help engineering teams move quickly while
+                keeping risk visible, measurable, and manageable.
+              </p>
+            </article>
+          </li>
+          <li class="timeline-item">
+            <article class="card">
+              <h3>Etsy</h3>
+              <p class="meta">September 2019 – 2026 • Brooklyn, NY</p>
+              <ol class="subroles">
+                <li class="subrole">
+                  <h4>Senior Security Engineer II</h4>
+                  <p class="meta">September 2019 – 2026</p>
+                  <p>
+                    Core security engineering role focused on detection engineering, SIEM infrastructure, and incident response tooling at scale. Built and maintained the systems that power Etsy's security operations, from log ingestion pipelines to detection-as-code workflows.
+                  </p>
+                </li>
+                <li class="subrole">
+                  <h4>Interim Manager, Security Operations</h4>
+                  <p class="meta">June 2025 – Feb 2026</p>
+                  <p>
+                    Stepped into a temporary management role for ~7 months while the team's manager was on leave. Defined SecOps KPIs, expanded the IR program to support external partners, and led cross-training initiatives before returning to my IC engineering role.
+                  </p>
+                </li>
+              </ol>
+            </article>
+          </li>
+          <li class="timeline-item">
+            <article class="card">
+              <h3>Security Engineer</h3>
+              <p class="meta">NIKSUN • June 2016 – August 2019 • Princeton, NJ</p>
+              <p>
+                Built security tooling for a network monitoring product company, including a malware sandboxing tool and a DDoS mitigation system that dynamically pushed traffic-filtering routes to local routers to block malicious traffic and prevent flooding.
+              </p>
+            </article>
+          </li>
+        </ol>
       </section>
 
       <section id="projects" class="section container reveal">
         <div class="section-heading">
-          <p class="eyebrow">Impact</p>
+          <p class="eyebrow"><span class="num">03</span> Impact</p>
           <h2>Selected Projects</h2>
         </div>
         <div class="project-grid">
           <article class="project card">
+            <span class="project-icon" aria-hidden="true">🤖</span>
             <h3>Fully Agentic Application Security</h3>
             <p>
               Building an AI-native application security workflow where autonomous agents triage findings,
@@ -132,50 +212,58 @@
               actionable fixes at product speed. The goal is to turn AppSec from a manual review bottleneck into
               a force multiplier for secure software delivery.
             </p>
-            <p class="tech">LLM Agents • AppSec • GitHub • Code Analysis • Secure SDLC</p>
+            <ul class="chips" aria-label="Technologies">
+              <li>LLM Agents</li><li>AppSec</li><li>GitHub</li><li>Code Analysis</li><li>Secure SDLC</li>
+            </ul>
           </article>
           <article class="project card">
+            <span class="project-icon" aria-hidden="true">🛰️</span>
             <h3>Distributed Log Ingestion Pipeline</h3>
             <p>
-              Designed and built a distributed log ingestion pipeline handling 1TB/day across 40+ sources,
-              with error handling, failure recovery, and auto-scaling — reducing SIEM costs by 70%.
+              Designed and built a distributed log ingestion pipeline handling <strong>1TB/day across 40+ sources</strong>,
+              with error handling, failure recovery, and auto-scaling — reducing SIEM costs by <strong>70%</strong>.
             </p>
-            <p class="tech">GCP Dataflow • Pub/Sub • Python • Terraform</p>
+            <ul class="chips" aria-label="Technologies">
+              <li>GCP Dataflow</li><li>Pub/Sub</li><li>Python</li><li>Terraform</li>
+            </ul>
           </article>
           <article class="project card">
+            <span class="project-icon" aria-hidden="true">🔎</span>
             <h3>AI Threat Hunting Tool</h3>
             <p>
               Built an AI-powered threat hunting tool that connects to Etsy's SIEM and EDR via MCP,
               automatically searches for new CVEs and zero-day exploits across all logs and endpoints,
               and generates a findings report.
             </p>
-            <p class="tech">Python • MCP • SIEM • EDR</p>
+            <ul class="chips" aria-label="Technologies">
+              <li>Python</li><li>MCP</li><li>SIEM</li><li>EDR</li>
+            </ul>
           </article>
         </div>
       </section>
 
       <section id="speaking" class="section container reveal">
         <div class="section-heading">
-          <p class="eyebrow">Public Work</p>
+          <p class="eyebrow"><span class="num">04</span> Public Work</p>
           <h2>Speaking &amp; Press</h2>
         </div>
         <div class="speaking-grid">
           <article class="card speaking-item">
-            <p class="speaking-label">Conference Talk</p>
+            <p class="speaking-label"><span aria-hidden="true">🎤</span> Conference Talk</p>
             <h3>Etsy and the Art of SIEM Migration</h3>
             <p class="meta">Google Cloud Summit '24</p>
             <p>A deep-dive into how Etsy executed a one-week SIEM migration at scale, reducing costs by 70% while expanding coverage 10x.</p>
             <a class="btn btn-outline" href="https://youtu.be/jviz41kMhoU" target="_blank" rel="noopener">Watch on YouTube</a>
           </article>
           <article class="card speaking-item">
-            <p class="speaking-label">Podcast</p>
+            <p class="speaking-label"><span aria-hidden="true">🎧</span> Podcast</p>
             <h3>One Week SIEM Migration: Fact or Fiction?</h3>
             <p class="meta">Google Security Podcast — Episode 184</p>
             <p>Featured on Google's cloud security podcast to discuss the engineering and strategy behind the Etsy SIEM migration.</p>
             <a class="btn btn-outline" href="https://cloud.withgoogle.com/cloudsecurity/podcast/ep184-one-week-siem-migration-fact-or-fiction" target="_blank" rel="noopener">Listen to Episode</a>
           </article>
           <article class="card speaking-item">
-            <p class="speaking-label">Blog Post</p>
+            <p class="speaking-label"><span aria-hidden="true">📝</span> Blog Post</p>
             <h3>One Week Wonder</h3>
             <p class="meta">Google Cloud Blog</p>
             <p>Google Cloud featured the Etsy SIEM migration story as a case study in rapid, high-quality security transformation.</p>
@@ -186,55 +274,64 @@
 
       <section id="education" class="section container reveal">
         <div class="section-heading">
-          <p class="eyebrow">Background</p>
+          <p class="eyebrow"><span class="num">05</span> Background</p>
           <h2>Education</h2>
         </div>
-        <div class="card">
-          <h3>Rutgers University</h3>
-          <p class="meta">B.S. Computer Science, Minor in Economics • 2012–2016 • New Brunswick, NJ</p>
-        </div>
-        <br />
-        <div class="card">
-          <h3>Certifications</h3>
-          <ul class="highlights">
-            <li>CompTIA Security+</li>
-            <li>GCP Professional Security Engineer</li>
-            <li>SANS Web Application Security</li>
-          </ul>
+        <div class="stack">
+          <div class="card">
+            <h3>Rutgers University</h3>
+            <p class="meta">B.S. Computer Science, Minor in Economics • 2012–2016 • New Brunswick, NJ</p>
+          </div>
+          <div class="card">
+            <h3>Certifications</h3>
+            <ul class="cert-list">
+              <li><span aria-hidden="true">🏅</span> CompTIA Security+</li>
+              <li><span aria-hidden="true">🏅</span> GCP Professional Security Engineer</li>
+              <li><span aria-hidden="true">🏅</span> SANS Web Application Security</li>
+            </ul>
+          </div>
         </div>
       </section>
 
-      <section class="section container reveal">
+      <section id="skills" class="section container reveal">
         <div class="section-heading">
-          <p class="eyebrow">Capabilities</p>
+          <p class="eyebrow"><span class="num">06</span> Capabilities</p>
           <h2>Skills</h2>
         </div>
-        <div class="skills card">
-          <span>AI</span>
-          <span>Agentic Security</span>
-          <span>Application Security</span>
-          <span>Detection Engineering</span>
-          <span>Incident Response</span>
-          <span>SIEM Engineering</span>
-          <span>Threat Hunting</span>
-          <span>Pen Testing</span>
-          <span>Kali Linux</span>
-          <span>Python</span>
-          <span>GCP</span>
-          <span>Terraform</span>
-          <span>SQL</span>
-          <span>Engineering Leadership</span>
-          <span>Software Engineering</span>
-        </div>
+        <ul class="skills card">
+          <li>AI</li>
+          <li>Agentic Security</li>
+          <li>Application Security</li>
+          <li>Detection Engineering</li>
+          <li>Incident Response</li>
+          <li>SIEM Engineering</li>
+          <li>Threat Hunting</li>
+          <li>Pen Testing</li>
+          <li>Kali Linux</li>
+          <li>Python</li>
+          <li>GCP</li>
+          <li>Terraform</li>
+          <li>SQL</li>
+          <li>Engineering Leadership</li>
+          <li>Software Engineering</li>
+        </ul>
       </section>
 
       <section id="side-quests" class="section container reveal">
         <div class="section-heading">
-          <p class="eyebrow">Beyond Work</p>
+          <p class="eyebrow"><span class="num">07</span> Beyond Work</p>
           <h2>Side Quests</h2>
+          <p class="section-sub">The quest log: things I do for fun, sweat, and good food.</p>
         </div>
         <div class="quest-grid">
           <article class="card quest-item">
+            <span class="quest-stamp ongoing">⚡ Ongoing</span>
+            <div class="poker-art" aria-hidden="true">
+              <span class="pcard"><b>A</b>♠</span>
+              <span class="pcard red"><b>K</b>♥</span>
+              <span class="pcard red"><b>Q</b>♦</span>
+              <span class="pcard"><b>J</b>♣</span>
+            </div>
             <h3>No-Chip Poker</h3>
             <p>
               Building and iterating on a polished browser-based poker app that makes gameplay feel smooth,
@@ -247,10 +344,13 @@
             </div>
           </article>
           <article class="card quest-item">
+            <span class="quest-stamp">✔ Completed</span>
             <img
               class="quest-main-image expandable-image"
-              src="pictures/side_quests/spartan_race_fenway/spartan_1.jpeg"
-              alt="Spartan Race at Fenway Park in 2024"
+              src="pictures/side_quests/spartan_race_fenway/thumbs/spartan_1.jpg"
+              data-full="pictures/side_quests/spartan_race_fenway/spartan_1.jpg"
+              width="540" height="720" loading="lazy" decoding="async"
+              alt="Spartan Race medal held up inside Fenway Park"
               tabindex="0" role="button" aria-label="Expand Spartan Race at Fenway Park photo"
             />
             <h3>Spartan Race Fenway</h3>
@@ -259,15 +359,18 @@
               obstacles while running repeated stair and bleacher circuits.
             </p>
             <div class="quest-gallery">
-              <img src="pictures/side_quests/spartan_race_fenway/spartan_2.PNG" alt="Spartan race obstacle photo 2" class="expandable-image" tabindex="0" role="button" aria-label="Expand Spartan race obstacle photo 2" />
-              <img src="pictures/side_quests/spartan_race_fenway/spartan_3.PNG" alt="Spartan race obstacle photo 3" class="expandable-image" tabindex="0" role="button" aria-label="Expand Spartan race obstacle photo 3" />
-              <img src="pictures/side_quests/spartan_race_fenway/spartan_4.PNG" alt="Spartan race obstacle photo 4" class="expandable-image" tabindex="0" role="button" aria-label="Expand Spartan race obstacle photo 4" />
+              <img src="pictures/side_quests/spartan_race_fenway/thumbs/spartan_2.jpg" data-full="pictures/side_quests/spartan_race_fenway/spartan_2.jpg" width="720" height="480" loading="lazy" decoding="async" alt="Spartan race obstacle photo 2" class="expandable-image" tabindex="0" role="button" aria-label="Expand Spartan race obstacle photo 2" />
+              <img src="pictures/side_quests/spartan_race_fenway/thumbs/spartan_3.jpg" data-full="pictures/side_quests/spartan_race_fenway/spartan_3.jpg" width="720" height="480" loading="lazy" decoding="async" alt="Spartan race obstacle photo 3" class="expandable-image" tabindex="0" role="button" aria-label="Expand Spartan race obstacle photo 3" />
+              <img src="pictures/side_quests/spartan_race_fenway/thumbs/spartan_4.jpg" data-full="pictures/side_quests/spartan_race_fenway/spartan_4.jpg" width="480" height="720" loading="lazy" decoding="async" alt="Spartan race obstacle photo 4" class="expandable-image" tabindex="0" role="button" aria-label="Expand Spartan race obstacle photo 4" />
             </div>
           </article>
           <article class="card quest-item">
+            <span class="quest-stamp">✔ Completed</span>
             <img
               class="quest-main-image expandable-image"
-              src="pictures/side_quests/half_marathon_brooklyn/half_medal.jpeg"
+              src="pictures/side_quests/half_marathon_brooklyn/thumbs/half_medal.jpg"
+              data-full="pictures/side_quests/half_marathon_brooklyn/half_medal.jpg"
+              width="540" height="720" loading="lazy" decoding="async"
               alt="Brooklyn Experience Half Marathon 2025 medal"
               tabindex="0" role="button" aria-label="Expand Brooklyn half marathon medal photo"
             />
@@ -277,14 +380,17 @@
               with consistent training and race-day execution.
             </p>
             <div class="quest-gallery">
-              <img src="pictures/side_quests/half_marathon_brooklyn/half.JPEG" alt="Brooklyn Experience Half Marathon 2025 finish photo" class="expandable-image" tabindex="0" role="button" aria-label="Expand Brooklyn Experience Half Marathon finish photo" />
-              <img src="pictures/side_quests/half_marathon_brooklyn/half_banner.jpeg" alt="Brooklyn half marathon banner photo" class="expandable-image" tabindex="0" role="button" aria-label="Expand Brooklyn half marathon banner photo" />
+              <img src="pictures/side_quests/half_marathon_brooklyn/thumbs/half.jpg" data-full="pictures/side_quests/half_marathon_brooklyn/half.jpg" width="383" height="720" loading="lazy" decoding="async" alt="Brooklyn Experience Half Marathon 2025 finish photo" class="expandable-image" tabindex="0" role="button" aria-label="Expand Brooklyn Experience Half Marathon finish photo" />
+              <img src="pictures/side_quests/half_marathon_brooklyn/thumbs/half_banner.jpg" data-full="pictures/side_quests/half_marathon_brooklyn/half_banner.jpg" width="540" height="720" loading="lazy" decoding="async" alt="Brooklyn half marathon banner photo" class="expandable-image" tabindex="0" role="button" aria-label="Expand Brooklyn half marathon banner photo" />
             </div>
           </article>
           <article class="card quest-item">
+            <span class="quest-stamp">✔ Completed</span>
             <img
               class="quest-main-image expandable-image"
-              src="pictures/side_quests/ragnar_relay_CT_to_MA/ragnar_medal.jpeg"
+              src="pictures/side_quests/ragnar_relay_CT_to_MA/thumbs/ragnar_medal.jpg"
+              data-full="pictures/side_quests/ragnar_relay_CT_to_MA/ragnar_medal.jpg"
+              width="540" height="720" loading="lazy" decoding="async"
               alt="Ragnar Relay medal from the 2024 relay"
               tabindex="0" role="button" aria-label="Expand Ragnar Relay medal photo"
             />
@@ -294,15 +400,18 @@
               coordinating pacing, handoffs, recovery, and teamwork under fatigue.
             </p>
             <div class="quest-gallery">
-              <img src="pictures/side_quests/ragnar_relay_CT_to_MA/ragnar_1.jpg" alt="Ragnar Relay CT to MA 2024 team photo" class="expandable-image" tabindex="0" role="button" aria-label="Expand Ragnar Relay team photo" />
-              <img src="pictures/side_quests/ragnar_relay_CT_to_MA/ragnar_2.jpg" alt="Ragnar Relay course photo" class="expandable-image" tabindex="0" role="button" aria-label="Expand Ragnar Relay course photo" />
-              <img src="pictures/side_quests/ragnar_relay_CT_to_MA/ragnar_3.jpg" alt="Ragnar Relay team moment" class="expandable-image" tabindex="0" role="button" aria-label="Expand Ragnar Relay team moment" />
+              <img src="pictures/side_quests/ragnar_relay_CT_to_MA/thumbs/ragnar_1.jpg" data-full="pictures/side_quests/ragnar_relay_CT_to_MA/ragnar_1.jpg" width="467" height="720" loading="lazy" decoding="async" alt="Ragnar Relay CT to MA 2024 team photo" class="expandable-image" tabindex="0" role="button" aria-label="Expand Ragnar Relay team photo" />
+              <img src="pictures/side_quests/ragnar_relay_CT_to_MA/thumbs/ragnar_2.jpg" data-full="pictures/side_quests/ragnar_relay_CT_to_MA/ragnar_2.jpg" width="456" height="720" loading="lazy" decoding="async" alt="Ragnar Relay course photo" class="expandable-image" tabindex="0" role="button" aria-label="Expand Ragnar Relay course photo" />
+              <img src="pictures/side_quests/ragnar_relay_CT_to_MA/thumbs/ragnar_3.jpg" data-full="pictures/side_quests/ragnar_relay_CT_to_MA/ragnar_3.jpg" width="525" height="720" loading="lazy" decoding="async" alt="Ragnar Relay team moment" class="expandable-image" tabindex="0" role="button" aria-label="Expand Ragnar Relay team moment" />
             </div>
           </article>
           <article class="card quest-item">
+            <span class="quest-stamp">✔ Completed</span>
             <img
               class="quest-main-image expandable-image"
-              src="pictures/side_quests/volunteering/volunteering_0.jpeg"
+              src="pictures/side_quests/volunteering/thumbs/volunteering_0.jpg"
+              data-full="pictures/side_quests/volunteering/volunteering_0.jpg"
+              width="548" height="720" loading="lazy" decoding="async"
               alt="Volunteering — park cleanup and bouquet making"
               tabindex="0" role="button" aria-label="Expand volunteering photo"
             />
@@ -313,30 +422,33 @@
               go a long way.
             </p>
             <div class="quest-gallery">
-              <img src="pictures/side_quests/volunteering/volunteering_1.jpeg" alt="Volunteering photo 1" class="expandable-image" tabindex="0" role="button" aria-label="Expand volunteering photo 1" />
-              <img src="pictures/side_quests/volunteering/volunteering_2.jpeg" alt="Volunteering photo 2" class="expandable-image" tabindex="0" role="button" aria-label="Expand volunteering photo 2" />
-              <img src="pictures/side_quests/volunteering/volunteering_3.JPG" alt="Volunteering photo 3" class="expandable-image" tabindex="0" role="button" aria-label="Expand volunteering photo 3" />
+              <img src="pictures/side_quests/volunteering/thumbs/volunteering_1.jpg" data-full="pictures/side_quests/volunteering/volunteering_1.jpg" width="527" height="720" loading="lazy" decoding="async" alt="Volunteering photo 1" class="expandable-image" tabindex="0" role="button" aria-label="Expand volunteering photo 1" />
+              <img src="pictures/side_quests/volunteering/thumbs/volunteering_2.jpg" data-full="pictures/side_quests/volunteering/volunteering_2.jpg" width="540" height="720" loading="lazy" decoding="async" alt="Volunteering photo 2" class="expandable-image" tabindex="0" role="button" aria-label="Expand volunteering photo 2" />
+              <img src="pictures/side_quests/volunteering/thumbs/volunteering_3.jpg" data-full="pictures/side_quests/volunteering/volunteering_3.jpg" width="531" height="720" loading="lazy" decoding="async" alt="Volunteering photo 3" class="expandable-image" tabindex="0" role="button" aria-label="Expand volunteering photo 3" />
             </div>
           </article>
           <article class="card quest-item">
+            <span class="quest-stamp ongoing">⚡ Ongoing</span>
             <img
               class="quest-main-image expandable-image"
-              src="pictures/side_quests/food/food_1.jpeg"
+              src="pictures/side_quests/food/thumbs/food_1.jpg"
+              data-full="pictures/side_quests/food/food_1.jpg"
+              width="540" height="720" loading="lazy" decoding="async"
               alt="Food content from @EatsCoastNaan"
               tabindex="0" role="button" aria-label="Expand food photo"
             />
-            <h3>NYC Yelp Elite & Food Content</h3>
+            <h3>NYC Yelp Elite &amp; Food Content</h3>
             <p>
               NYC Yelp Elite member for 6 years running. Creating food content on TikTok
               at <a href="https://www.tiktok.com/@eatscoastnaan" target="_blank" rel="noopener">@EatsCoastNaan</a>
               exploring New York's diverse culinary scene.
             </p>
             <div class="quest-gallery">
-              <img src="pictures/side_quests/food/food_2.jpeg" alt="Food content photo 2" class="expandable-image" tabindex="0" role="button" aria-label="Expand food photo 2" />
-              <img src="pictures/side_quests/food/food_3.jpeg" alt="Food content photo 3" class="expandable-image" tabindex="0" role="button" aria-label="Expand food photo 3" />
-              <img src="pictures/side_quests/food/food_4.jpeg" alt="Food content photo 4" class="expandable-image" tabindex="0" role="button" aria-label="Expand food photo 4" />
-              <img src="pictures/side_quests/food/food_5.jpeg" alt="Food content photo 5" class="expandable-image" tabindex="0" role="button" aria-label="Expand food photo 5" />
-              <img src="pictures/side_quests/food/food_6.jpeg" alt="Food content photo 6" class="expandable-image" tabindex="0" role="button" aria-label="Expand food photo 6" />
+              <img src="pictures/side_quests/food/thumbs/food_2.jpg" data-full="pictures/side_quests/food/food_2.jpg" width="540" height="720" loading="lazy" decoding="async" alt="Food content photo 2" class="expandable-image" tabindex="0" role="button" aria-label="Expand food photo 2" />
+              <img src="pictures/side_quests/food/thumbs/food_3.jpg" data-full="pictures/side_quests/food/food_3.jpg" width="540" height="720" loading="lazy" decoding="async" alt="Food content photo 3" class="expandable-image" tabindex="0" role="button" aria-label="Expand food photo 3" />
+              <img src="pictures/side_quests/food/thumbs/food_4.jpg" data-full="pictures/side_quests/food/food_4.jpg" width="540" height="720" loading="lazy" decoding="async" alt="Food content photo 4" class="expandable-image" tabindex="0" role="button" aria-label="Expand food photo 4" />
+              <img src="pictures/side_quests/food/thumbs/food_5.jpg" data-full="pictures/side_quests/food/food_5.jpg" width="720" height="540" loading="lazy" decoding="async" alt="Food content photo 5" class="expandable-image" tabindex="0" role="button" aria-label="Expand food photo 5" />
+              <img src="pictures/side_quests/food/thumbs/food_6.jpg" data-full="pictures/side_quests/food/food_6.jpg" width="541" height="720" loading="lazy" decoding="async" alt="Food content photo 6" class="expandable-image" tabindex="0" role="button" aria-label="Expand food photo 6" />
             </div>
           </article>
         </div>
@@ -344,16 +456,16 @@
 
       <section id="contact" class="section container reveal">
         <div class="section-heading">
-          <p class="eyebrow">Reach Out</p>
+          <p class="eyebrow"><span class="num">08</span> Reach Out</p>
           <h2>Contact</h2>
         </div>
         <div class="card contact-card">
-          <p class="open-to-work">🟢 Building agentic, AI-native AppSec</p>
+          <p class="open-to-work"><span class="pulse-dot" aria-hidden="true"></span> Building AI-native security systems</p>
           <p>
-            Interested in working together? I’m focused on building AI-powered security systems and
-            agentic application security programs that scale across whole organizations. I’m especially
-            interested in opportunities where I can help engineering teams ship faster with stronger
-            security foundations and clearer risk signals.
+            Interested in working together? I build security systems that scale — detection and response,
+            cloud and infrastructure security, and product security — increasingly powered by AI and agents.
+            I’m especially interested in opportunities where I can help engineering teams ship faster with
+            stronger security foundations and clearer risk signals.
           </p>
           <div class="contact-links">
             <a class="btn btn-primary" href="https://www.linkedin.com/in/manandoshi1" target="_blank" rel="noopener">Connect on LinkedIn</a>
@@ -364,17 +476,22 @@
     </main>
 
     <footer class="footer container">
-      <p>© <span id="year"></span> Manan "Naan" Doshi.</p>
-      <div class="pixel-runway" aria-hidden="true">
-        <div class="pixel-runner" id="bulbaRunner">
-          <img id="bulbaRunnerImg" alt="Animated Bulbasaur" />
-        </div>
+      <p>© <span id="year"></span> Manan "Naan" Doshi. <span class="footer-hint">Psst — click the little guy below.</span></p>
+      <div class="pixel-runway" id="pixelRunway">
+        <div class="grass" aria-hidden="true"></div>
+        <button class="pixel-runner" id="bulbaRunner" type="button" aria-label="Bulbasaur mascot — click to make it jump">
+          <span class="runner-body">
+            <span class="runner-sprite" aria-hidden="true"></span>
+          </span>
+          <span class="runner-shadow" aria-hidden="true"></span>
+          <span class="runner-bubble" id="bulbaBubble" role="status" aria-live="polite"></span>
+        </button>
       </div>
     </footer>
 
     <div id="imageLightbox" class="lightbox" aria-hidden="true">
       <button id="lightboxClose" class="lightbox-close" aria-label="Close expanded image">×</button>
-      <img id="lightboxImage" class="lightbox-image" src="" alt="Expanded side quest image" />
+      <img id="lightboxImage" class="lightbox-image" alt="Expanded side quest image" />
     </div>
 
     <script src="script.js"></script>
